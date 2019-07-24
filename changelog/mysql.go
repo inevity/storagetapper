@@ -31,7 +31,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 	"github.com/siddontang/go-mysql/mysql"
 	"github.com/siddontang/go-mysql/replication"
 	"github.com/uber/storagetapper/config"
@@ -699,7 +699,7 @@ func (b *mysqlReader) readEvents(c *db.Addr, stateUpdateTimeout int) {
 		Password: c.Pwd,
 	}
 
-	syncer := replication.NewBinlogSyncer(&cfg)
+	syncer := replication.NewBinlogSyncer(cfg)
 	streamer, err := syncer.StartSyncGTID(b.gtidSet)
 	if log.E(err) {
 		return

@@ -24,9 +24,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/linkedin/goavro"
+	//	"github.com/linkedin/goavro/v2"
 	"github.com/uber/storagetapper/types"
 	"github.com/uber/storagetapper/util"
+	"gopkg.in/linkedin/goavro.v1"
 )
 
 const (

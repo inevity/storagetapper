@@ -25,10 +25,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/linkedin/goavro"
+	//"github.com/linkedin/goavro"
 	"github.com/uber/storagetapper/log"
 	"github.com/uber/storagetapper/state"
 	"github.com/uber/storagetapper/types"
+	"gopkg.in/linkedin/goavro.v1"
 )
 
 const numMetadataFields = 3

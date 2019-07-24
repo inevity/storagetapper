@@ -30,4 +30,4 @@ const MySvcName = "storagetapper"
 var TestMySQLUser = "root"
 
 //TestMySQLPassword is MySQL password used to connect to MySQL in test
-var TestMySQLPassword = ""
+var TestMySQLPassword = "123456"

@@ -4,10 +4,12 @@ set -ex
 
 NAME=hadoop
 DIR=/home/$NAME
-VERSION=2.8.4
-SHA256="6B545972FDD73173887CDBC3E1CBD3CC72068271924EDEA82A0E7E653199B115"
+#VERSION=2.8.4
+VERSION=3.1.2
+#SHA256="6B545972FDD73173887CDBC3E1CBD3CC72068271924EDEA82A0E7E653199B115"
+SHA256="1c02ccc60a09c63a48dc4234ffd3aed1b75e5a1f2b49d60927eda114b93dd31a"
 
-sudo apt-get install default-jre wget
+sudo apt-get install -y default-jre wget
 sudo useradd $NAME -m || [ $? -eq 9 ]
 cd $DIR
 [ -f hadoop-$VERSION.tar.gz ] || sudo -H -u $NAME wget "https://mirrors.ocf.berkeley.edu/apache/hadoop/common/hadoop-$VERSION/hadoop-$VERSION.tar.gz" -O hadoop-$VERSION.tar.gz
@@ -35,7 +37,8 @@ cat << 'EOF' | sudo -H -u $NAME tee $DIR/etc/hadoop/hdfs-site.xml
 EOF
 
 sudo -H -u $NAME /bin/bash <<EOF
-sed -i 's+export JAVA_HOME=.*+export JAVA_HOME=\$(dirname \$(dirname \$(readlink -f  /usr/bin/javac)))+' etc/hadoop/hadoop-env.sh
+#sed -i 's+export JAVA_HOME=.*+export JAVA_HOME=\$(dirname \$(dirname \$(readlink -f  /usr/bin/javac)))+' etc/hadoop/hadoop-env.sh
+sed -i 's+export JAVA_HOME=.*+export JAVA_HOME=\$(dirname \$(dirname \$(readlink -f  /usr/bin/java)))+' etc/hadoop/hadoop-env.sh
 if [ ! -f ~/.ssh/id_rsa ]; then
 	ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 	cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
@@ -53,3 +56,16 @@ if [ -z "$DOCKER_BUILD" ]; then
 	bin/hdfs dfs -chown -R $USER:$(id -g -n) /user/$USER
 fi
 EOF
+#
+#hadoop@ubuntu:~$ cat a.sh
+##!/bin/bash
+#set -ex
+#bin/hdfs namenode -format -force
+#USER=hadoop
+#if [ -z "$DOCKER_BUILD" ]; then
+#	sbin/start-dfs.sh
+#	#wait \$PID
+#	sleep 60
+#	bin/hdfs dfs -mkdir -p /user/$USER
+#	bin/hdfs dfs -chown -R $USER:$(id -g -n) /user/$USER
+#fi

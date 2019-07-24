@@ -126,6 +126,7 @@ func TestGetRaw(t *testing.T) {
 
 	loc.Cluster = "please_return_nil_db_addr"
 	_, err = GetRaw(loc, TestTbl)
+	// if err == nil, fail!!!
 	test.Assert(t, err != nil, "invalid db loc should fail")
 
 	dropTestSchemaTable(t)
@@ -174,6 +175,7 @@ func TestConvertToAvroSchema(t *testing.T) {
 	test.CheckFail(err, t)
 
 	//Verify whether a valid Avro schema by creating new codec of goavro library
+	log.Warnf(string(serAvroSchema))
 	_, err = goavro.NewCodec(string(serAvroSchema))
 	test.CheckFail(err, t)
 

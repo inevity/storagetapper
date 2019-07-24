@@ -6,7 +6,7 @@ logging:
   level: debug
 
 state_update_timeout: 10
-state_connect_url: "root@localhost"
+state_connect_url: "root:123456@localhost"
 kafka_addresses:
   - "localhost:9092"
 hadoop:

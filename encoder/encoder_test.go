@@ -24,9 +24,12 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"reflect"
+	"runtime/pprof"
 	"testing"
 	"time"
 
@@ -959,6 +962,19 @@ func (e *encBench) decode(n int, b *testing.B) {
 	}
 }
 
+type matchStringOnly func(pat, str string) (bool, error)
+
+var errMain = errors.New("testing: unexpected use of func Main")
+
+func (f matchStringOnly) MatchString(pat, str string) (bool, error)   { return f(pat, str) }
+func (f matchStringOnly) StartCPUProfile(w io.Writer) error           { return errMain }
+func (f matchStringOnly) StopCPUProfile()                             {}
+func (f matchStringOnly) WriteHeapProfile(w io.Writer) error          { return pprof.WriteHeapProfile(w) }
+func (f matchStringOnly) WriteProfileTo(string, io.Writer, int) error { return errMain }
+func (f matchStringOnly) ImportPath() string                          { return "" }
+func (f matchStringOnly) StartTestLog(io.Writer)                      {}
+func (f matchStringOnly) StopTestLog() error                          { return errMain }
+
 func runBenchmarks() {
 	arr := make([]byte, 1024)
 	for i := 0; i < 1024; i++ {
@@ -1014,7 +1030,8 @@ func runBenchmarks() {
 	log.Configure(cfg.LogType, "error", config.EnvProduction())
 
 	anything := func(pat, str string) (bool, error) { return true, nil }
-	testing.Main(anything, nil, benchmarks, nil)
+	//	testing.Main(anything, nil, benchmarks, nil)
+	testing.MainStart(matchStringOnly(anything), nil, benchmarks, nil)
 }
 
 func TestMain(m *testing.M) {
